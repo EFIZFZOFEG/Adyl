@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dylsh Chop | Expert High-Tech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f2ba13; 
+            --dark-bg: #0e0e0e;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --border: #333333;
+            --whatsapp: #25D366;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--dark-bg); color: var(--text); padding-bottom: 80px; }
+
+        header {
+            background: #000; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary);
+        }
+        .menu-toggle { font-size: 24px; cursor: pointer; color: var(--text); }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
+        .logo span { color: var(--primary); }
+
+        .cart-trigger { background: #222; border: none; border-radius: 50%; width: 40px; height: 40px; color: white; position: relative; cursor: pointer; }
+        .badge { position: absolute; top: -5px; right: -5px; background: var(--primary); color: #000; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; }
+
+        /* MENU LATÉRAL */
+        .side-menu { position: fixed; top: 0; left: -100%; width: 80%; height: 100%; background: #fff; color: #000; z-index: 2000; transition: 0.4s; padding: 20px 0; }
+        .side-menu.open { left: 0; }
+        .menu-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; font-weight: 600; cursor: pointer; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
+        .overlay.active { display: block; }
+
+        /* BANNIÈRE DYNAMIQUE */
+        .universe-section { padding: 20px 15px; }
+        .universe-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; }
+        .universe-img { width: 100%; height: 160px; overflow: hidden; }
+        .universe-img img { width: 100%; height: 100%; object-fit: cover; }
+        .universe-info { padding: 12px; text-align: center; }
+        .universe-info h3 { color: var(--primary); text-transform: uppercase; font-size: 0.9rem; }
+
+        /* GRILLE PRODUITS */
+        .section-title { padding: 10px 20px; font-size: 1rem; color: var(--primary); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; }
+        .product-card { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 8px; background: #000; }
+        .p-name { font-size: 0.75rem; height: 32px; overflow: hidden; margin-bottom: 5px; line-height: 1.2; }
+        .p-price { color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; }
+        .add-btn { width: 100%; background: var(--primary); border: none; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 0.7rem; cursor: pointer; }
+
+        /* PANIER */
+        .cart-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 60vh; background: white; color: black; z-index: 2500; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; }
+        .cart-panel.open { transform: translateY(0); }
+        .cart-items { flex: 1; overflow-y: auto; margin: 15px 0; }
+        .checkout-btn { background: var(--whatsapp); color: white; width: 100%; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+        /* WHATSAPP GAUCHE */
+        .float-wa { position: fixed; bottom: 20px; left: 20px; background: var(--whatsapp); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; text-decoration: none; color: white; font-size: 32px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="menu-toggle" onclick="toggleMenu(true)">☰</div>
+    <div class="logo">DYLSH<span>CHOP</span></div>
+    <button class="cart-trigger" onclick="toggleCart(true)">
+        🛒<span class="badge" id="cartCount">0</span>
+    </button>
+</header>
+
+<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+<div class="side-menu" id="sideMenu">
+    <div style="padding: 20px; font-weight: bold; border-bottom: 1px solid #eee; background: #f9f9f9;">DYLSH SERVICES</div>
+    <div class="menu-item" onclick="filterItems('all')">Tous les produits <span>❯</span></div>
+    <div class="menu-item" onclick="filterItems('screen')">Écrans iPhone <span>❯</span></div>
+    <div class="menu-item" onclick="filterItems('soft')">Logiciels Windows <span>❯</span></div>
+</div>
+
+<div class="universe-section" id="heroSection">
+    <div class="universe-card">
+        <div class="universe-img"><img src="https://i.ibb.co/35L8ZMn5/IMG-3883.jpg" id="heroImg"></div>
+        <div class="universe-info">
+            <h3 id="heroTitle">Expert High-Tech Ouaga</h3>
+        </div>
+    </div>
+</div>
+
+<div class="section-title">
+    <span id="categoryLabel">Tous les produits</span>
+</div>
+
+<div class="product-grid" id="productGrid"></div>
+
+<a href="https://wa.me/22671504488" class="float-wa"><i class="fab fa-whatsapp"></i></a>
+
+<div class="cart-panel" id="cartPanel">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Mon Panier</h3>
+        <button onclick="toggleCart(false)" style="border:none; background:none; font-size:20px;">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div style="border-top:1px solid #eee; padding-top:15px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+            <span>Total :</span>
+            <span id="totalAmount">0 FCFA</span>
+        </div>
+        <a href="#" class="checkout-btn" onclick="sendWhatsApp(event)">
+            <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
+        </a>
+    </div>
+</div>
+
+<script>
+const products = [
+    // ÉCRANS IPHONE
+    { id:1, name:"Écran iPhone 16 Pro Max", price:65000, img:"https://i.ibb.co/VpJVyMhK/IMG-3881.jpg", cat:"screen" },
+    { id:2, name:"Écran iPhone 15 Original", price:45000, img:"https://i.ibb.co/zVVFY4KM/IMG-3882.jpg", cat:"screen" },
+    { id:3, name:"Écran iPhone 14 (OLED)", price:38000, img:"https://i.ibb.co/FbGcfyPW/IMG-3880.jpg", cat:"screen" },
+    { id:4, name:"Écran iPhone 11 (Premium)", price:22000, img:"https://i.ibb.co/35L8ZMn5/IMG-3883.jpg", cat:"screen" },
+    
+    // LOGICIELS WINDOWS
+    { id:5, name:"Installation Windows 10/11", price:5000, img:"https://i.ibb.co/8DndTgMn/IMG-3923.jpg", cat:"soft" },
+    { id:6, name:"Pack Office (Word/Excel)", price:3000, img:"https://i.ibb.co/Z66fWHqq/IMG-3924.png", cat:"soft" },
+    { id:7, name:"Antivirus Pro (Licence)", price:7500, img:"https://i.ibb.co/GvRRSjhH/IMG-3920.jpg", cat:"soft" },
+    { id:8, name:"Adobe Photoshop CC", price:5000, img:"https://i.ibb.co/MxGdt6R5/IMG-3922.jpg", cat:"soft" }
+];
+
+let cart = [];
+
+function toggleMenu(show) {
+    document.getElementById('sideMenu').classList.toggle('open', show);
+    document.getElementById('overlay').style.display = show ? 'block' : 'none';
+}
+
+function toggleCart(show) {
+    document.getElementById('cartPanel').classList.toggle('open', show);
+}
+
+function filterItems(category) {
+    toggleMenu(false);
+    const label = document.getElementById('categoryLabel');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroImg = document.getElementById('heroImg');
+    
+    if(category === 'all') {
+        label.innerText = "Tous les produits";
+        heroTitle.innerText = "Expert High-Tech Ouaga";
+        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg";
+        renderProducts(products);
+    } else if(category === 'screen') {
+        label.innerText = "Écrans iPhone";
+        heroTitle.innerText = "Écrans Haute Qualité";
+        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg";
+        renderProducts(products.filter(p => p.cat === 'screen'));
+    } else if(category === 'soft') {
+        label.innerText = "Logiciels Windows";
+        heroTitle.innerText = "Installation de Logiciels";
+        heroImg.src = "https://i.ibb.co/RTMBJF0D/IMG-3925.webp";
+        renderProducts(products.filter(p => p.cat === 'soft'));
+    }
+}
+
+function renderProducts(list) {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = list.map(p => `
+        <div class="product-card">
+            <img src="${p.img}">
+            <div>
+                <div class="p-name">${p.name}</div>
+                <div class="p-price">${p.price.toLocaleString()} F</div>
+            </div>
+            <button class="add-btn" onclick="addToCart(${p.id})">AJOUTER</button>
+        </div>
+    `).join('');
+}
+
+function addToCart(id) {
+    const p = products.find(x => x.id === id);
+    const exist = cart.find(x => x.id === id);
+    if(exist) exist.qty++;
+    else cart.push({...p, qty:1});
+    updateUI();
+}
+
+function updateUI() {
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    document.getElementById('cartCount').innerText = count;
+    document.getElementById('totalAmount').innerText = total.toLocaleString() + ' FCFA';
+    const itemsDiv = document.getElementById('cartItems');
+    if(cart.length === 0) {
+        itemsDiv.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px;">Panier vide</p>';
+    } else {
+        itemsDiv.innerHTML = cart.map(item => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.85rem; border-bottom:1px solid #f9f9f9; padding-bottom:5px;">
+                <span><b>${item.name}</b> (x${item.qty})</span>
+                <span>${(item.price * item.qty).toLocaleString()} F</span>
+            </div>
+        `).join('');
+    }
+}
+
+function sendWhatsApp(e) {
+    e.preventDefault();
+    if(cart.length === 0) return;
+    const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const list = cart.map(p => `- ${p.name} (x${p.qty})`).join('\n');
+    const msg = `Salut Dylsh Chop ! 👋\n\nMa commande :\n${list}\n\n💰 TOTAL : *${total.toLocaleString()} FCFA*`;
+    window.location.href = `https://wa.me/22671504488?text=${encodeURIComponent(msg)}`;
+}
+
+renderProducts(products);
+</script>
+</body>
+</html>

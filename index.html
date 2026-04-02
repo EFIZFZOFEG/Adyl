@@ -1,267 +1,458 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dylsh Chop | Expert High-Tech Ouaga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #f2ba13; 
-            --dark-bg: #0e0e0e;
-            --card-bg: #1a1a1a;
-            --text: #ffffff;
-            --border: #333333;
+            --blue: #003d82;
+            --blue-light: #0055b3;
+            --accent: #e8f0fb;
+            --border: #e2e2e2;
+            --text: #1a1a2e;
+            --sub: #555;
+            --white: #ffffff;
             --whatsapp: #25D366;
-            --call: #007BFF;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--dark-bg); color: var(--text); padding-bottom: 80px; }
+```
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Barlow', sans-serif; background: #f5f6f8; color: var(--text); padding-bottom: 90px; overflow-x: hidden; }
 
-        header {
-            background: #000; padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--primary);
-        }
-        .menu-toggle { font-size: 24px; cursor: pointer; color: var(--text); }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; letter-spacing: 1px; }
-        .logo span { color: var(--primary); }
+    /* ─── HEADER ─── */
+    header {
+        background: var(--white);
+        border-bottom: 2px solid var(--blue);
+        position: sticky; top: 0; z-index: 1000;
+    }
+    .header-top {
+        display: flex; align-items: center;
+        padding: 10px 15px; gap: 12px;
+    }
+    .menu-toggle { font-size: 26px; color: var(--blue); cursor: pointer; flex-shrink: 0; }
+    .logo-wrap { flex: 1; display: flex; flex-direction: column; align-items: flex-start; }
+    .logo { font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--blue); letter-spacing: -1px; line-height: 1; }
+    .logo sub { font-size: 0.45rem; font-weight: 700; letter-spacing: 2px; color: var(--sub); text-transform: uppercase; display: block; margin-top: 2px; }
+    .header-icons { display: flex; gap: 8px; align-items: center; }
+    .icon-btn { background: none; border: none; color: var(--blue); font-size: 22px; cursor: pointer; position: relative; padding: 4px; }
+    .icon-btn.cart-btn { background: var(--blue); color: #fff; border-radius: 6px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .badge { position: absolute; top: -4px; right: -4px; background: #ffe066; color: #000; font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: 8px; }
 
-        .cart-trigger { background: #222; border: none; border-radius: 50%; width: 40px; height: 40px; color: white; position: relative; cursor: pointer; }
-        .badge { position: absolute; top: -5px; right: -5px; background: var(--primary); color: #000; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; }
+    /* ─── TOAST ─── */
+    .toast {
+        position: fixed; top: 70px; right: 12px; left: auto; transform: translateY(-20px);
+        background: #1a1a2e; color: #fff; padding: 12px 16px;
+        border-radius: 12px; font-size: 0.82rem; font-weight: 600;
+        display: flex; flex-direction: column; gap: 8px;
+        z-index: 9999; opacity: 0; transition: 0.3s ease;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+        pointer-events: none; max-width: 220px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast-top { display: flex; align-items: center; gap: 8px; }
+    .toast .check { background: #25D366; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; flex-shrink: 0; }
+    .toast-hint {
+        display: flex; align-items: center; gap: 6px;
+        background: rgba(255,255,255,0.1); border-radius: 8px;
+        padding: 7px 10px; font-size: 0.75rem; color: #ffe066; font-weight: 700;
+    }
+    .toast-hint .arrow-up { font-size: 1rem; animation: bounceUp 0.7s infinite alternate; display: inline-block; }
+    @keyframes bounceUp { from { transform: translateY(0); } to { transform: translateY(-4px); } }
 
-        /* MENU LATÉRAL */
-        .side-menu { position: fixed; top: 0; left: -100%; width: 80%; height: 100%; background: #fff; color: #000; z-index: 2000; transition: 0.4s; padding: 20px 0; }
-        .side-menu.open { left: 0; }
-        .menu-item { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; font-weight: 600; cursor: pointer; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
-        .overlay.active { display: block; }
+    /* ─── BREADCRUMB ─── */
+    .breadcrumb {
+        display: flex; align-items: center; gap: 8px;
+        padding: 12px 15px;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+    }
+    .breadcrumb .back-btn { color: var(--blue); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .breadcrumb .sep { color: var(--border); }
+    .breadcrumb .current { font-weight: 700; color: var(--text); }
 
-        /* BANNIÈRE DYNAMIQUE (Image Expertise Tech par défaut) */
-        .universe-section { padding: 20px 15px; }
-        .universe-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; }
-        .universe-img { width: 100%; height: 160px; overflow: hidden; }
-        .universe-img img { width: 100%; height: 100%; object-fit: cover; }
-        .universe-info { padding: 12px; text-align: center; }
-        .universe-info h3 { color: var(--primary); text-transform: uppercase; font-size: 0.9rem; }
+    /* ─── HERO BANNER (Guide style LDLC) ─── */
+    .hero-banner {
+        margin: 14px 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(135deg, #001f4d 0%, #003d82 60%, #0055b3 100%);
+        min-height: 140px;
+        display: flex; align-items: flex-end;
+    }
+    .hero-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; }
+    .hero-content {
+        position: relative; z-index: 2;
+        padding: 18px;
+    }
+    .hero-tag { background: var(--blue-light); color: #fff; font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
+    .hero-content h2 { color: #ffe066; font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; line-height: 1.2; margin-bottom: 4px; }
+    .hero-content h1 { color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 1.7rem; font-weight: 900; line-height: 1; }
+    .hero-arrow { position: absolute; right: 16px; bottom: 50%; transform: translateY(50%); background: rgba(255,255,255,0.15); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; }
 
-        /* GRILLE PRODUITS */
-        .section-title { padding: 10px 20px; font-size: 1rem; color: var(--primary); text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
-        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px; }
-        .product-card { background: var(--card-bg); border-radius: 10px; padding: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 8px; background: #000; }
-        .p-name { font-size: 0.75rem; height: 32px; overflow: hidden; margin-bottom: 5px; line-height: 1.2; }
-        .p-price { color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; }
-        .add-btn { width: 100%; background: var(--primary); border: none; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 0.7rem; cursor: pointer; color: #000; }
+    /* ─── SECTION TITLE ─── */
+    .section-title {
+        font-family: 'Barlow Condensed', sans-serif;
+        font-size: 1.15rem; font-weight: 900;
+        text-transform: uppercase; letter-spacing: 1px;
+        color: var(--text);
+        padding: 18px 15px 10px;
+        text-align: center;
+    }
+    .section-title::after {
+        content: ':'; margin-left: 2px;
+    }
 
-        /* PANIER */
-        .cart-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 60vh; background: white; color: black; z-index: 2500; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; }
-        .cart-panel.open { transform: translateY(0); }
-        .cart-items { flex: 1; overflow-y: auto; margin: 15px 0; }
-        .checkout-btn { background: var(--whatsapp); color: white; width: 100%; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; }
+    /* ─── CATEGORY LIST (Style LDLC avec image + texte) ─── */
+    .category-list { padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+    .cat-row {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex; align-items: center;
+        overflow: hidden;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .cat-row:active { border-color: var(--blue); transform: scale(0.99); }
+    .cat-img { width: 88px; height: 72px; object-fit: cover; flex-shrink: 0; background: #f0f2f5; }
+    .cat-info { flex: 1; padding: 0 14px; }
+    .cat-info h3 { font-size: 0.95rem; font-weight: 700; color: var(--blue); }
+    .cat-info span { font-size: 0.75rem; color: var(--sub); }
+    .cat-arrow { padding: 0 14px; color: var(--blue); font-size: 0.9rem; }
 
-        /* SECTION À PROPOS & IMPORTANCE (BAS DE PAGE) */
-        .about-section { padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
-        .about-title { font-weight: 700; font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; }
-        .about-section p { font-size: 0.8rem; color: #ccc; text-align: justify; line-height: 1.6; margin-bottom: 15px; }
-        .about-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
+    /* ─── PRODUCT GRID ─── */
+    .product-section { display: none; padding: 0 15px 20px; }
+    .product-section.active { display: block; }
+    .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .product-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex; flex-direction: column;
+        transition: 0.2s;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .product-card:active { border-color: var(--blue); }
+    .product-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 5px; margin-bottom: 10px; background: #f5f6f8; }
+    .p-name { font-size: 0.78rem; font-weight: 600; line-height: 1.35; height: 36px; overflow: hidden; color: #333; margin-bottom: 8px; }
+    .p-price { color: var(--blue); font-weight: 900; font-size: 1rem; text-align: right; margin-bottom: 10px; }
+    .add-btn { background: var(--blue); color: #fff; border: none; padding: 9px; border-radius: 5px; font-weight: 700; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; }
+    .add-btn:active { background: #002d6e; }
 
-        /* CONTACT (BAS DE PAGE) */
-        .contact-footer { padding: 20px; text-align: center; background-color: #000; border-top: 1px solid var(--border); padding-bottom: 100px; }
-        .contact-footer h4 { margin-bottom: 15px; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: var(--text); }
-        .phone-call-btn { background-color: var(--call); color: white; width: 60px; height: 60px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,123,255,0.3); animation: pulse 2s infinite; }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,123,255,0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0,123,255,0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,123,255,0); }
-        }
+    /* ─── BACK TO CATS ─── */
+    .back-to-cats { display: none; margin: 10px 15px 0; }
+    .back-to-cats.visible { display: block; }
+    .back-btn-full { width: 100%; background: #f0f2f5; border: 1px solid var(--border); border-radius: 7px; padding: 12px; font-size: 0.85rem; font-weight: 700; color: var(--blue); cursor: pointer; display: flex; align-items: center; gap: 8px; }
 
-        .float-wa { position: fixed; bottom: 20px; left: 20px; background: var(--whatsapp); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; text-decoration: none; font-size: 30px; }
-    </style>
+    /* ─── ABOUT SECTION ─── */
+    .about-section { margin: 20px 15px; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .about-header { background: var(--blue); color: #fff; padding: 14px 16px; font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .about-body { padding: 16px; font-size: 0.85rem; color: #555; line-height: 1.7; }
+    .about-body img { width: 100%; border-radius: 5px; margin-top: 14px; }
+
+    /* ─── CONTACT ─── */
+    .contact-section { margin: 0 15px 20px; background: #fff; border-radius: 8px; border: 1px solid var(--border); padding: 20px; text-align: center; }
+    .contact-section h4 { font-weight: 800; font-size: 0.85rem; text-transform: uppercase; color: var(--text); margin-bottom: 16px; letter-spacing: 1px; }
+    .phone-number { display: inline-block; font-weight: 800; color: #007BFF; letter-spacing: 1px; font-size: 1.1rem; text-decoration: none; border-bottom: 2px solid #007BFF; padding-bottom: 2px; }
+    .cart-btn.ping { animation: cartPing 0.4s ease; }
+    @keyframes cartPing { 0%{transform:scale(1)} 50%{transform:scale(1.25)} 100%{transform:scale(1)} }
+
+    /* ─── SIDE MENU ─── */
+    .side-menu { position: fixed; top: 0; left: -100%; width: 82%; height: 100%; background: var(--blue); color: #fff; z-index: 2000; transition: 0.4s cubic-bezier(0.77,0.2,0.05,1.0); }
+    .side-menu.open { left: 0; }
+    .menu-head { padding: 40px 22px 20px; font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 900; border-bottom: 1px solid rgba(255,255,255,0.12); letter-spacing: 2px; }
+    .menu-item { padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 1px; font-size: 0.82rem; font-weight: 600; cursor: pointer; opacity: 0; transform: translateX(-20px); transition: 0.35s ease; color: #fff; }
+    .side-menu.open .menu-item { opacity: 1; transform: translateX(0); }
+    .side-menu.open .menu-item:nth-child(2) { transition-delay: 0.05s; }
+    .side-menu.open .menu-item:nth-child(3) { transition-delay: 0.1s; }
+    .side-menu.open .menu-item:nth-child(4) { transition-delay: 0.15s; }
+    .side-menu.open .menu-item:nth-child(5) { transition-delay: 0.2s; }
+    .menu-item:active { background: rgba(0,0,0,0.12); }
+
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; z-index: 1500; backdrop-filter: blur(3px); }
+    .overlay.active { display: block; }
+
+    /* ─── CART PANEL ─── */
+    .cart-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 72vh; background: #fff; z-index: 2500; border-radius: 18px 18px 0 0; transform: translateY(100%); transition: 0.45s cubic-bezier(0.4,0,0.2,1); padding: 24px 20px; display: flex; flex-direction: column; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); }
+    .cart-panel.open { transform: translateY(0); }
+    .cart-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .cart-top h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.3rem; font-weight: 900; text-transform: uppercase; }
+    .close-cart { border: none; background: #f0f2f5; width: 34px; height: 34px; border-radius: 50%; font-weight: 800; cursor: pointer; font-size: 0.9rem; }
+    .cart-items { flex: 1; overflow-y: auto; margin: 16px 0; }
+    .cart-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #f0f2f5; font-size: 0.85rem; }
+    .cart-item-name { font-weight: 600; color: #333; max-width: 65%; line-height: 1.3; }
+    .cart-item-price { font-weight: 900; color: var(--blue); white-space: nowrap; }
+    .total-row { display: flex; justify-content: space-between; padding: 16px 0; border-top: 2px solid #eee; font-weight: 900; font-size: 1.1rem; }
+    .checkout-btn { background: var(--whatsapp); color: #fff; width: 100%; padding: 16px; border-radius: 10px; text-align: center; font-weight: 800; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 0.95rem; letter-spacing: 0.5px; }
+
+    .float-wa { position: fixed; bottom: 22px; left: 22px; background: var(--whatsapp); color: white; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.25); z-index: 999; font-size: 28px; text-decoration: none; }
+</style>
+```
+
 </head>
 <body>
 
-<header>
-    <div class="menu-toggle" onclick="toggleMenu(true)">☰</div>
-    <div class="logo">DYLSH<span>CHOP</span></div>
-    <button class="cart-trigger" onclick="toggleCart(true)">
-        🛒<span class="badge" id="cartCount">0</span>
-    </button>
-</header>
+<!-- OVERLAY -->
 
-<div class="overlay" id="overlay" onclick="toggleMenu(false)"></div>
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- SIDE MENU -->
+
 <div class="side-menu" id="sideMenu">
-    <div style="padding: 20px; font-weight: bold; border-bottom: 1px solid #eee; background: #f9f9f9;">DYLSH SERVICES</div>
-    <div class="menu-item" onclick="filterItems('all')">Tous les produits <span>❯</span></div>
-    <div class="menu-item" onclick="filterItems('screen')">Écrans iPhone <span>❯</span></div>
-    <div class="menu-item" onclick="filterItems('soft')">Logiciels Windows <span>❯</span></div>
-    <div class="menu-item" onclick="filterItems('cable')">CÂBLES DE CONNEXION <span>❯</span></div>
+    <div class="menu-head">DYLSH CHOP</div>
+    <div class="menu-item" onclick="showCats()">Catalogue Complet <span>❯</span></div>
+    <div class="menu-item" onclick="showCategory('screen')">Écrans iPhone <span>❯</span></div>
+    <div class="menu-item" onclick="showCategory('soft')">Logiciels Windows <span>❯</span></div>
+    <div class="menu-item" onclick="showCategory('cable')">Câbles & Connectique <span>❯</span></div>
 </div>
 
-<div class="universe-section" id="heroSection">
-    <div class="universe-card">
-        <div class="universe-img"><img src="https://i.ibb.co/cS12x149/IMG-3973.jpg" id="heroImg"></div>
-        <div class="universe-info">
-            <h3 id="heroTitle">Expertise Tech Ouaga</h3>
+<!-- HEADER -->
+
+<header>
+    <div class="header-top">
+        <div class="menu-toggle" onclick="toggleMenu(true)">☰</div>
+        <div class="logo-wrap">
+            <div class="logo">DYLSH<span style="color:#ffe066">CHOP</span></div>
+            <sub style="font-size:0.45rem;font-weight:700;letter-spacing:2px;color:#888;text-transform:uppercase;">HIGH-TECH OUAGADOUGOU</sub>
         </div>
+        <div class="header-icons">
+            <button class="icon-btn cart-btn" onclick="toggleCart(true)">
+                🛒 <span class="badge" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- BREADCRUMB -->
+
+<div class="breadcrumb" id="breadcrumb">
+    <span class="back-btn" id="backBtn" onclick="showCats()" style="display:none;"><i class="fas fa-chevron-left"></i> Retour</span>
+    <span class="sep" id="breadSep" style="display:none;">|</span>
+    <span class="current" id="breadCurrent">Accueil</span>
+</div>
+
+<!-- CATEGORIES VIEW -->
+
+<div id="catsView">
+    <!-- HERO BANNER -->
+    <div class="hero-banner">
+        <img src="https://i.ibb.co/cS12x149/IMG-3973.jpg" onerror="this.style.display='none'">
+        <div class="hero-content">
+            <div class="hero-tag">GUIDE</div>
+            <h2>J'ai besoin d'un écran iPhone...</h2>
+            <h1>LEQUEL CHOISIR ?</h1>
+        </div>
+        <div class="hero-arrow"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+```
+<!-- NOS CATÉGORIES -->
+<div class="section-title">NOS CATÉGORIES</div>
+
+<div class="category-list">
+    <div class="cat-row" onclick="showCategory('screen')">
+        <img class="cat-img" src="https://i.ibb.co/VpJVyMhK/IMG-3881.jpg" onerror="this.src='https://via.placeholder.com/88x72/003d82/fff?text=📱'">
+        <div class="cat-info">
+            <h3>Écrans iPhone</h3>
+            <span>4 produits · OLED qualité premium</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <div class="cat-row" onclick="showCategory('soft')">
+        <img class="cat-img" src="https://i.ibb.co/8DndTgMn/IMG-3923.jpg" onerror="this.src='https://via.placeholder.com/88x72/003d82/fff?text=💻'">
+        <div class="cat-info">
+            <h3>Logiciels Windows</h3>
+            <span>4 produits · Windows & Office</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <div class="cat-row" onclick="showCategory('cable')">
+        <img class="cat-img" src="https://i.ibb.co/ZzCF39GT/IMG-3963.jpg" onerror="this.src='https://via.placeholder.com/88x72/003d82/fff?text=🔌'">
+        <div class="cat-info">
+            <h3>Câbles & Connectique</h3>
+            <span>3 produits · HDMI, DVI, Ethernet</span>
+        </div>
+        <div class="cat-arrow"><i class="fas fa-chevron-right"></i></div>
     </div>
 </div>
 
-<div class="section-title">
-    <span id="categoryLabel">Tous les produits</span>
-</div>
-
-<div class="product-grid" id="productGrid"></div>
-
+<!-- À PROPOS -->
 <div class="about-section">
-    <div class="about-title">Importance du Matériel</div>
-    <p>
-        À l'ère du numérique, la qualité et la performance du matériel informatique sont cruciales pour la productivité et la pérennité de votre activité. Des composants robustes et des logiciels fiables assurent non seulement un gain de temps précieux, mais garantissent également la sécurité de vos données et un confort de travail optimal. Investir dans des équipements high-tech de premier choix chez Dylsh Chop, c'est investir dans l'avenir de votre entreprise.
-    </p>
-    <img src="https://i.ibb.co/wZG4B3xf/IMG-3974.webp" alt="Importance Informatique" class="about-img">
+    <div class="about-header">À PROPOS DE DYLSH CHOP</div>
+    <div class="about-body">
+        À l'ère du numérique, la qualité et la performance du matériel informatique sont cruciales pour la productivité. Des composants robustes et des logiciels fiables assurent non seulement un gain de temps précieux, mais garantissent également la sécurité de vos données.
+        <img src="https://i.ibb.co/wZG4B3xf/IMG-3974.webp" onerror="this.style.display='none'">
+    </div>
 </div>
 
-<div class="contact-footer">
+<!-- CONTACT -->
+<div class="contact-section">
     <h4>Contactez-nous maintenant</h4>
-    <a href="tel:+22654000504" class="phone-call-btn">
-        <i class="fas fa-phone-alt"></i>
-    </a>
-    <p style="margin-top:15px; font-weight:800; color:var(--call);">+226 54 00 05 04</p>
+    <a href="tel:+22654000504" class="phone-number">+226 54 00 05 04</a>
 </div>
+```
+
+</div>
+
+<!-- PRODUCTS VIEW -->
+
+<div id="productsView" style="display:none;">
+    <div class="back-to-cats visible">
+        <button class="back-btn-full" onclick="showCats()"><i class="fas fa-chevron-left"></i> Retour aux catégories</button>
+    </div>
+    <div class="product-section active">
+        <div class="product-grid" id="productGrid"></div>
+    </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast">
+    <div class="toast-top">
+        <div class="check">✓</div>
+        <span id="toastMsg">Article ajouté !</span>
+    </div>
+    <div class="toast-hint">
+        <span class="arrow-up">↑</span> Voir mon panier en haut à droite
+    </div>
+</div>
+
+<!-- CART PANEL -->
+
+<div class="cart-panel" id="cartPanel">
+    <div class="cart-top">
+        <h2>Ma Commande</h2>
+        <button class="close-cart" onclick="toggleCart(false)">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"><p style="color:#aaa;font-size:0.85rem;text-align:center;margin-top:20px;">Votre panier est vide</p></div>
+    <div class="total-row">
+        <span>TOTAL</span>
+        <span id="totalAmount" style="color:var(--blue);">0 FCFA</span>
+    </div>
+    <a href="#" class="checkout-btn" onclick="sendWhatsApp(event)">
+        <i class="fab fa-whatsapp"></i> COMMANDER VIA WHATSAPP
+    </a>
+</div>
+
+<!-- FLOAT WHATSAPP -->
 
 <a href="https://wa.me/22671504488" class="float-wa"><i class="fab fa-whatsapp"></i></a>
 
-<div class="cart-panel" id="cartPanel">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Mon Panier</h3>
-        <button onclick="toggleCart(false)" style="border:none; background:none; font-size:20px;">✕</button>
-    </div>
-    <div class="cart-items" id="cartItems"></div>
-    <div style="border-top:1px solid #eee; padding-top:15px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
-            <span>Total :</span>
-            <span id="totalAmount">0 FCFA</span>
-        </div>
-        <a href="#" class="checkout-btn" onclick="sendWhatsApp(event)">
-            <i class="fab fa-whatsapp"></i> Commander sur WhatsApp
-        </a>
-    </div>
-</div>
-
 <script>
 const products = [
-    // ÉCRANS IPHONE
-    { id:1, name:"Écran iPhone 16 Pro Max", price:65000, img:"https://i.ibb.co/VpJVyMhK/IMG-3881.jpg", cat:"screen" },
-    { id:2, name:"Écran iPhone 15 Original", price:45000, img:"https://i.ibb.co/zVVFY4KM/IMG-3882.jpg", cat:"screen" },
-    { id:3, name:"Écran iPhone 14 (OLED)", price:38000, img:"https://i.ibb.co/FbGcfyPW/IMG-3880.jpg", cat:"screen" },
-    { id:4, name:"Écran iPhone 11 (Premium)", price:22000, img:"https://i.ibb.co/35L8ZMn5/IMG-3883.jpg", cat:"screen" },
-    
-    // LOGICIELS
-    { id:5, name:"Windows 10/11 Pro", price:5000, img:"https://i.ibb.co/8DndTgMn/IMG-3923.jpg", cat:"soft" },
-    { id:6, name:"Pack Office 2021", price:3000, img:"https://i.ibb.co/Z66fWHqq/IMG-3924.png", cat:"soft" },
-    { id:7, name:"Antivirus Kaspersky Pro", price:7500, img:"https://i.ibb.co/GvRRSjhH/IMG-3920.jpg", cat:"soft" },
-    { id:8, name:"Adobe Suite CC Complète", price:5000, img:"https://i.ibb.co/MxGdt6R5/IMG-3922.jpg", cat:"soft" },
-
-    // CÂBLES ET CONNECTIQUES
-    { id:9, name:"Câble HDMI", price:3500, img:"https://i.ibb.co/ZzCF39GT/IMG-3963.jpg", cat:"cable" },
-    { id:10, name:"Câble DVI", price:4000, img:"https://i.ibb.co/21PsdVGK/IMG-3967.jpg", cat:"cable" },
-    { id:11, name:"Câble Ethernet", price:3000, img:"https://i.ibb.co/Dgrr1Sbj/IMG-3965.jpg", cat:"cable" }
+    { id:1, name:"Écran iPhone 16 Pro Max Original", price:65000, img:"https://i.ibb.co/VpJVyMhK/IMG-3881.jpg", cat:"screen" },
+    { id:2, name:"Écran iPhone 15 Original OLED", price:45000, img:"https://i.ibb.co/zVVFY4KM/IMG-3882.jpg", cat:"screen" },
+    { id:3, name:"Écran iPhone 14 (OLED) Qualité Premium", price:38000, img:"https://i.ibb.co/FbGcfyPW/IMG-3880.jpg", cat:"screen" },
+    { id:4, name:"Écran iPhone 11 (OLED) Qualité A+", price:22000, img:"https://i.ibb.co/35L8ZMn5/IMG-3883.jpg", cat:"screen" },
+    { id:5, name:"Installation Windows 10/11 Pro + Activation", price:5000, img:"https://i.ibb.co/8DndTgMn/IMG-3923.jpg", cat:"soft" },
+    { id:6, name:"Pack Microsoft Office 2021 Pro Plus", price:3000, img:"https://i.ibb.co/Z66fWHqq/IMG-3924.png", cat:"soft" },
+    { id:7, name:"Antivirus Kaspersky Pro (Licence 1 an)", price:7500, img:"https://i.ibb.co/GvRRSjhH/IMG-3920.jpg", cat:"soft" },
+    { id:8, name:"Adobe Creative Cloud Suite Complet", price:5000, img:"https://i.ibb.co/MxGdt6R5/IMG-3922.jpg", cat:"soft" },
+    { id:9, name:"Câble HDMI 4K Haute Vitesse (2m)", price:3500, img:"https://i.ibb.co/ZzCF39GT/IMG-3963.jpg", cat:"cable" },
+    { id:10, name:"Câble DVI Pro Mâle/Mâle (1.8m)", price:4000, img:"https://i.ibb.co/21PsdVGK/IMG-3967.jpg", cat:"cable" },
+    { id:11, name:"Câble Ethernet Cat6 Snagless (5m)", price:3000, img:"https://i.ibb.co/Dgrr1Sbj/IMG-3965.jpg", cat:"cable" }
 ];
 
 let cart = [];
 
 function toggleMenu(show) {
     document.getElementById('sideMenu').classList.toggle('open', show);
-    document.getElementById('overlay').style.display = show ? 'block' : 'none';
+    document.getElementById('overlay').classList.toggle('active', show);
 }
 
 function toggleCart(show) {
     document.getElementById('cartPanel').classList.toggle('open', show);
+    document.getElementById('overlay').classList.toggle('active', show);
 }
 
-function filterItems(category) {
+function closeAll() {
     toggleMenu(false);
-    const label = document.getElementById('categoryLabel');
-    const heroTitle = document.getElementById('heroTitle');
-    const heroImg = document.getElementById('heroImg');
-    
-    if(category === 'all') {
-        label.innerText = "Tous les produits";
-        heroTitle.innerText = "Expertise Tech Ouaga";
-        heroImg.src = "https://i.ibb.co/cS12x149/IMG-3973.jpg"; // Bannière Accueil
-        renderProducts(products);
-    } else if(category === 'screen') {
-        label.innerText = "Écrans iPhone";
-        heroTitle.innerText = "Écrans Haute Qualité";
-        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg"; // Bannière Écrans
-        renderProducts(products.filter(p => p.cat === 'screen'));
-    } else if(category === 'soft') {
-        label.innerText = "Logiciels Windows";
-        heroTitle.innerText = "Solutions Logiciels";
-        heroImg.src = "https://i.ibb.co/RTMBJF0D/IMG-3925.webp"; // Bannière Logiciels
-        renderProducts(products.filter(p => p.cat === 'soft'));
-    } else if(category === 'cable') {
-        label.innerText = "Câbles de connexion";
-        heroTitle.innerText = "Câbles & Connectiques";
-        heroImg.src = "https://i.ibb.co/k7cyXms/IMG-3971.jpg"; // Bannière Câbles
-        renderProducts(products.filter(p => p.cat === 'cable'));
-    }
+    toggleCart(false);
+}
+
+const catLabels = { screen:'Écrans iPhone', soft:'Logiciels Windows', cable:'Câbles & Connectique' };
+
+function showCategory(cat) {
+    toggleMenu(false);
+    const filtered = products.filter(p => p.cat === cat);
+    renderProducts(filtered);
+    document.getElementById('catsView').style.display = 'none';
+    document.getElementById('productsView').style.display = 'block';
+    document.getElementById('backBtn').style.display = 'flex';
+    document.getElementById('breadSep').style.display = 'inline';
+    document.getElementById('breadCurrent').innerText = catLabels[cat] || cat;
+}
+
+function showCats() {
+    toggleMenu(false);
+    document.getElementById('catsView').style.display = 'block';
+    document.getElementById('productsView').style.display = 'none';
+    document.getElementById('backBtn').style.display = 'none';
+    document.getElementById('breadSep').style.display = 'none';
+    document.getElementById('breadCurrent').innerText = 'Accueil';
 }
 
 function renderProducts(list) {
-    const grid = document.getElementById('productGrid');
-    grid.innerHTML = list.map(p => `
+    document.getElementById('productGrid').innerHTML = list.map(p => `
         <div class="product-card">
-            <img src="${p.img}">
-            <div>
-                <div class="p-name">${p.name}</div>
-                <div class="p-price">${p.price.toLocaleString()} F</div>
-            </div>
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200x100/f5f6f8/003d82?text=📦'">
+            <div class="p-name">${p.name}</div>
+            <div class="p-price">${p.price.toLocaleString()} F</div>
             <button class="add-btn" onclick="addToCart(${p.id})">AJOUTER</button>
         </div>
     `).join('');
 }
 
+function showToast(name) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').innerText = '« ' + name.substring(0, 28) + (name.length > 28 ? '…' : '') + ' » ajouté !';
+    toast.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
 function addToCart(id) {
     const p = products.find(x => x.id === id);
-    const exist = cart.find(x => x.id === id);
-    if(exist) exist.qty++;
-    else cart.push({...p, qty:1});
+    const ex = cart.find(x => x.id === id);
+    if(ex) ex.qty++; else cart.push({...p, qty:1});
     updateUI();
+    showToast(p.name);
 }
 
 function updateUI() {
-    const count = cart.reduce((a, b) => a + b.qty, 0);
-    const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const count = cart.reduce((a,b) => a + b.qty, 0);
+    const total = cart.reduce((a,b) => a + (b.price * b.qty), 0);
     document.getElementById('cartCount').innerText = count;
     document.getElementById('totalAmount').innerText = total.toLocaleString() + ' FCFA';
-    
-    const itemsDiv = document.getElementById('cartItems');
-    if(cart.length === 0) {
-        itemsDiv.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px;">Panier vide</p>';
-    } else {
-        itemsDiv.innerHTML = cart.map(item => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:0.85rem; border-bottom:1px solid #333; padding-bottom:8px;">
-                <span><b>${item.name}</b> (x${item.qty})</span>
-                <span style="color:var(--primary);">${(item.price * item.qty).toLocaleString()} F</span>
+    document.getElementById('cartItems').innerHTML = cart.length === 0
+        ? '<p style="color:#aaa;font-size:0.85rem;text-align:center;margin-top:20px;">Votre panier est vide</p>'
+        : cart.map(i => `
+            <div class="cart-item">
+                <div class="cart-item-name">${i.name} <span style="color:#888;">(x${i.qty})</span></div>
+                <div class="cart-item-price">${(i.price * i.qty).toLocaleString()} F</div>
             </div>
         `).join('');
-    }
 }
 
 function sendWhatsApp(e) {
     e.preventDefault();
-    if(cart.length === 0) return;
-    const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    if(cart.length === 0) return alert("Votre panier est vide !");
+    const total = cart.reduce((a,b) => a + (b.price * b.qty), 0);
     const list = cart.map(p => `- ${p.name} (x${p.qty})`).join('%0A');
-    const msg = `Salut Dylsh Chop ! 👋%0A%0AMa commande :%0A${list}\n\n💰 TOTAL : *${total.toLocaleString()} FCFA*`;
-    window.location.href = `https://wa.me/22671504488?text=${encodeURIComponent(msg)}`;
+    const msg = `Salut Dylsh Chop ! 👋%0A%0AMa commande :%0A${list}%0A%0A💰 TOTAL : *${total.toLocaleString()} FCFA*`;
+    window.location.href = `https://wa.me/22671504488?text=${msg}`;
 }
-
-renderProducts(products);
 </script>
+
 </body>
 </html>

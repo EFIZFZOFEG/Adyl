@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dylsh Chop | Expert High-Tech</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dylsh Chop | Expert High-Tech Ouaga</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,6 +14,7 @@
             --text: #ffffff;
             --border: #333333;
             --whatsapp: #25D366;
+            --call: #007BFF;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -38,7 +39,7 @@
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
         .overlay.active { display: block; }
 
-        /* BANNIÈRE DYNAMIQUE */
+        /* BANNIÈRE DYNAMIQUE (Image Expertise Tech par défaut) */
         .universe-section { padding: 20px 15px; }
         .universe-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 10px; }
         .universe-img { width: 100%; height: 160px; overflow: hidden; }
@@ -53,7 +54,7 @@
         .product-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 5px; margin-bottom: 8px; background: #000; }
         .p-name { font-size: 0.75rem; height: 32px; overflow: hidden; margin-bottom: 5px; line-height: 1.2; }
         .p-price { color: var(--primary); font-weight: bold; font-size: 0.9rem; margin-bottom: 8px; }
-        .add-btn { width: 100%; background: var(--primary); border: none; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 0.7rem; cursor: pointer; }
+        .add-btn { width: 100%; background: var(--primary); border: none; padding: 8px; border-radius: 5px; font-weight: bold; font-size: 0.7rem; cursor: pointer; color: #000; }
 
         /* PANIER */
         .cart-panel { position: fixed; bottom: 0; left: 0; right: 0; height: 60vh; background: white; color: black; z-index: 2500; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: 0.4s; padding: 20px; display: flex; flex-direction: column; }
@@ -61,8 +62,24 @@
         .cart-items { flex: 1; overflow-y: auto; margin: 15px 0; }
         .checkout-btn { background: var(--whatsapp); color: white; width: 100%; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 10px; }
 
-        /* WHATSAPP GAUCHE */
-        .float-wa { position: fixed; bottom: 20px; left: 20px; background: var(--whatsapp); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; text-decoration: none; color: white; font-size: 32px; }
+        /* SECTION À PROPOS & IMPORTANCE (BAS DE PAGE) */
+        .about-section { padding: 30px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
+        .about-title { font-weight: 700; font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; }
+        .about-section p { font-size: 0.8rem; color: #ccc; text-align: justify; line-height: 1.6; margin-bottom: 15px; }
+        .about-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; border: 1px solid var(--border); }
+
+        /* CONTACT (BAS DE PAGE) */
+        .contact-footer { padding: 20px; text-align: center; background-color: #000; border-top: 1px solid var(--border); padding-bottom: 100px; }
+        .contact-footer h4 { margin-bottom: 15px; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; color: var(--text); }
+        .phone-call-btn { background-color: var(--call); color: white; width: 60px; height: 60px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 26px; text-decoration: none; box-shadow: 0 4px 10px rgba(0,123,255,0.3); animation: pulse 2s infinite; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,123,255,0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0,123,255,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,123,255,0); }
+        }
+
+        .float-wa { position: fixed; bottom: 20px; left: 20px; background: var(--whatsapp); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 999; text-decoration: none; font-size: 30px; }
     </style>
 </head>
 <body>
@@ -81,13 +98,14 @@
     <div class="menu-item" onclick="filterItems('all')">Tous les produits <span>❯</span></div>
     <div class="menu-item" onclick="filterItems('screen')">Écrans iPhone <span>❯</span></div>
     <div class="menu-item" onclick="filterItems('soft')">Logiciels Windows <span>❯</span></div>
+    <div class="menu-item" onclick="filterItems('cable')">CÂBLES DE CONNEXION <span>❯</span></div>
 </div>
 
 <div class="universe-section" id="heroSection">
     <div class="universe-card">
-        <div class="universe-img"><img src="https://i.ibb.co/35L8ZMn5/IMG-3883.jpg" id="heroImg"></div>
+        <div class="universe-img"><img src="https://i.ibb.co/cS12x149/IMG-3973.jpg" id="heroImg"></div>
         <div class="universe-info">
-            <h3 id="heroTitle">Expert High-Tech Ouaga</h3>
+            <h3 id="heroTitle">Expertise Tech Ouaga</h3>
         </div>
     </div>
 </div>
@@ -97,6 +115,22 @@
 </div>
 
 <div class="product-grid" id="productGrid"></div>
+
+<div class="about-section">
+    <div class="about-title">Importance du Matériel</div>
+    <p>
+        À l'ère du numérique, la qualité et la performance du matériel informatique sont cruciales pour la productivité et la pérennité de votre activité. Des composants robustes et des logiciels fiables assurent non seulement un gain de temps précieux, mais garantissent également la sécurité de vos données et un confort de travail optimal. Investir dans des équipements high-tech de premier choix chez Dylsh Chop, c'est investir dans l'avenir de votre entreprise.
+    </p>
+    <img src="https://i.ibb.co/wZG4B3xf/IMG-3974.webp" alt="Importance Informatique" class="about-img">
+</div>
+
+<div class="contact-footer">
+    <h4>Contactez-nous maintenant</h4>
+    <a href="tel:+22654000504" class="phone-call-btn">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+    <p style="margin-top:15px; font-weight:800; color:var(--call);">+226 54 00 05 04</p>
+</div>
 
 <a href="https://wa.me/22671504488" class="float-wa"><i class="fab fa-whatsapp"></i></a>
 
@@ -125,11 +159,16 @@ const products = [
     { id:3, name:"Écran iPhone 14 (OLED)", price:38000, img:"https://i.ibb.co/FbGcfyPW/IMG-3880.jpg", cat:"screen" },
     { id:4, name:"Écran iPhone 11 (Premium)", price:22000, img:"https://i.ibb.co/35L8ZMn5/IMG-3883.jpg", cat:"screen" },
     
-    // LOGICIELS WINDOWS
-    { id:5, name:"Installation Windows 10/11", price:5000, img:"https://i.ibb.co/8DndTgMn/IMG-3923.jpg", cat:"soft" },
-    { id:6, name:"Pack Office (Word/Excel)", price:3000, img:"https://i.ibb.co/Z66fWHqq/IMG-3924.png", cat:"soft" },
-    { id:7, name:"Antivirus Pro (Licence)", price:7500, img:"https://i.ibb.co/GvRRSjhH/IMG-3920.jpg", cat:"soft" },
-    { id:8, name:"Adobe Photoshop CC", price:5000, img:"https://i.ibb.co/MxGdt6R5/IMG-3922.jpg", cat:"soft" }
+    // LOGICIELS
+    { id:5, name:"Windows 10/11 Pro", price:5000, img:"https://i.ibb.co/8DndTgMn/IMG-3923.jpg", cat:"soft" },
+    { id:6, name:"Pack Office 2021", price:3000, img:"https://i.ibb.co/Z66fWHqq/IMG-3924.png", cat:"soft" },
+    { id:7, name:"Antivirus Kaspersky Pro", price:7500, img:"https://i.ibb.co/GvRRSjhH/IMG-3920.jpg", cat:"soft" },
+    { id:8, name:"Adobe Suite CC Complète", price:5000, img:"https://i.ibb.co/MxGdt6R5/IMG-3922.jpg", cat:"soft" },
+
+    // CÂBLES ET CONNECTIQUES
+    { id:9, name:"Câble HDMI", price:3500, img:"https://i.ibb.co/ZzCF39GT/IMG-3963.jpg", cat:"cable" },
+    { id:10, name:"Câble DVI", price:4000, img:"https://i.ibb.co/21PsdVGK/IMG-3967.jpg", cat:"cable" },
+    { id:11, name:"Câble Ethernet", price:3000, img:"https://i.ibb.co/Dgrr1Sbj/IMG-3965.jpg", cat:"cable" }
 ];
 
 let cart = [];
@@ -151,19 +190,24 @@ function filterItems(category) {
     
     if(category === 'all') {
         label.innerText = "Tous les produits";
-        heroTitle.innerText = "Expert High-Tech Ouaga";
-        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg";
+        heroTitle.innerText = "Expertise Tech Ouaga";
+        heroImg.src = "https://i.ibb.co/cS12x149/IMG-3973.jpg"; // Bannière Accueil
         renderProducts(products);
     } else if(category === 'screen') {
         label.innerText = "Écrans iPhone";
         heroTitle.innerText = "Écrans Haute Qualité";
-        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg";
+        heroImg.src = "https://i.ibb.co/35L8ZMn5/IMG-3883.jpg"; // Bannière Écrans
         renderProducts(products.filter(p => p.cat === 'screen'));
     } else if(category === 'soft') {
         label.innerText = "Logiciels Windows";
-        heroTitle.innerText = "Installation de Logiciels";
-        heroImg.src = "https://i.ibb.co/RTMBJF0D/IMG-3925.webp";
+        heroTitle.innerText = "Solutions Logiciels";
+        heroImg.src = "https://i.ibb.co/RTMBJF0D/IMG-3925.webp"; // Bannière Logiciels
         renderProducts(products.filter(p => p.cat === 'soft'));
+    } else if(category === 'cable') {
+        label.innerText = "Câbles de connexion";
+        heroTitle.innerText = "Câbles & Connectiques";
+        heroImg.src = "https://i.ibb.co/k7cyXms/IMG-3971.jpg"; // Bannière Câbles
+        renderProducts(products.filter(p => p.cat === 'cable'));
     }
 }
 
@@ -194,14 +238,15 @@ function updateUI() {
     const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
     document.getElementById('cartCount').innerText = count;
     document.getElementById('totalAmount').innerText = total.toLocaleString() + ' FCFA';
+    
     const itemsDiv = document.getElementById('cartItems');
     if(cart.length === 0) {
         itemsDiv.innerHTML = '<p style="text-align:center; color:#888; margin-top:20px;">Panier vide</p>';
     } else {
         itemsDiv.innerHTML = cart.map(item => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.85rem; border-bottom:1px solid #f9f9f9; padding-bottom:5px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:0.85rem; border-bottom:1px solid #333; padding-bottom:8px;">
                 <span><b>${item.name}</b> (x${item.qty})</span>
-                <span>${(item.price * item.qty).toLocaleString()} F</span>
+                <span style="color:var(--primary);">${(item.price * item.qty).toLocaleString()} F</span>
             </div>
         `).join('');
     }
@@ -211,8 +256,8 @@ function sendWhatsApp(e) {
     e.preventDefault();
     if(cart.length === 0) return;
     const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const list = cart.map(p => `- ${p.name} (x${p.qty})`).join('\n');
-    const msg = `Salut Dylsh Chop ! 👋\n\nMa commande :\n${list}\n\n💰 TOTAL : *${total.toLocaleString()} FCFA*`;
+    const list = cart.map(p => `- ${p.name} (x${p.qty})`).join('%0A');
+    const msg = `Salut Dylsh Chop ! 👋%0A%0AMa commande :%0A${list}\n\n💰 TOTAL : *${total.toLocaleString()} FCFA*`;
     window.location.href = `https://wa.me/22671504488?text=${encodeURIComponent(msg)}`;
 }
 
